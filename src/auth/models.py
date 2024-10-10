@@ -4,7 +4,8 @@ from sqlalchemy import (
     Integer,
     String,
     Boolean,
-    DateTime
+    DateTime,
+    Text,
 )
 
 from sqlalchemy.orm import (
@@ -21,19 +22,16 @@ DB_ECHO = False
 engine = create_engine(url=DB_URL, echo=DB_ECHO)
 
 
-class Base:
-    id = Column(Integer, primary_key=True)
-
-
-Base = declarative_base(cls=Base)
+Base = declarative_base()
 
 
 class User(Base):
     __tablename__ = 'users'
-
+    id = Column(Integer, primary_key=True)
     email = Column(String(50), unique=True, nullable=False)
     username = Column(String(30), unique=True, nullable=False)
     password = Column(String(256), nullable=False)
+    token = Column(Text, unique=True, nullable=False)
 
     def __str__(self):
         return (
@@ -51,7 +49,7 @@ def create_table():
 
 def main():
     create_table()
-
+    # Base.metadata.drop_all(bind=engine)
 
 if __name__ == '__main__':
     main()
